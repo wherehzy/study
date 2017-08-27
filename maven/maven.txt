@@ -1,0 +1,83 @@
+1.maven的作用
+统一规范管理工具
+统一管理jar包
+
+官方下载的本地仓库的配置在"%MAVEN_HOME%\conf\settings.xml"里面，找一下"localRepository"就可以了；MyEclipse默认的本地仓库的地址在"{user.home}/.m2/repository"路径下，同样找一下"localRepository"就可以找到MyEclipse默认的本地仓库了。
+
+本地仓库和远程仓库是这样的，Maven工程首先会从本地仓库中获取jar包，当无法获取指定jar包时，本地仓库会从远程仓库（中央仓库）中下载jar包，并放入本地仓库以备将来使用。
+
+Maven的目录结构：
+
+main目录下是项目的主要代码，test目录下存放测试相关的代码
+编译输出后的代码会放在target目录下
+src/main/java下存放Java代码，src/main/resources下存放配置文件
+这里没有webapp，Web项目会有webapp目录，webapp下存放Web应用相关代码
+pom.xml是Maven项目的配置文件
+
+mvn clean 
+说明: 清理项目生产的临时文件,一般是模块下的target目录
+
+mvn package 
+说明: 项目打包工具,会在模块下的target目录生成jar或war等文件，如下运行结果。
+
+mvn test 
+说明: 测试命令,或执行src/test/java/下junit的测试用例.
+
+
+mvn install 
+说明: 模块安装命令 将打包的的jar/war文件复制到你的本地仓库中,供其他模块使用 -Dmaven.test.skip=true 跳过测试(同时会跳过test compile)
+
+
+mvn deploy 
+说明: 发布命令 将打包的文件发布到远程参考,提供其他人员进行下载依赖 ,一般是发布到公司的私服，这里我没配置私服，所以就不演示了。
+
+mvn dependency:resolve 
+查看依赖
+
+
+<project>  
+<modelVersion>4.0.0</modelVersion>  
+<!- The Basics 项目的基本信息->  
+<groupId>...</groupId>  
+<artifactId>...</artifactId>  
+<version>...</version>  
+<packaging>...</packaging>  
+<dependencies>...</dependencies>  
+<parent>...</parent>  
+<dependencyManagement>...</dependencyManagement>  
+<modules>...</modules>  
+<properties>...</properties>  
+<!- Build Settings 项目的编译设置->  
+<build>...</build>  
+<reporting>...</reporting>  
+<!- More Project Information 其它项目信息 ->  
+<name>...</name>  
+<description>...</description>  
+<url>...</url>  
+<inceptionYear>...</inceptionYear>  
+<licenses>...</licenses>  
+<organization>...</organization>  
+<developers>...</developers>  
+<contributors>...</contributors>  
+<!-- Environment Settings ->  
+<issueManagement>...</issueManagement>  
+<ciManagement>...</ciManagement>  
+<mailingLists>...</mailingLists>   
+<scm>...</scm>  
+<prerequisites>...</prerequisites>  
+<repositories>...</repositories>  
+<pluginRepositories>...</pluginRepositories>  
+<distributionManagement>...</distributionManagement>  
+<profiles>...</profiles>  
+</project>  
+
+依赖关系：
+<parent></parent>
+
+
+合成关系
+<modules>
+   <module></module>
+   <module></module>
+</modules>
+

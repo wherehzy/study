@@ -26,3 +26,12 @@
 3.离开线程有两种常用的方法：
   抛出InterruptedException和用Thread.interrupted()检查是否发生中断
 
+4.线程基本方法
+Thread.yield();//将CPU控制权让给其他线程
+join();在一个线程中调用other.join() ，让其他线程执行完在执行本线程
+Thread.sleep(); 等待一段时间
+interrupte(); 调用线程的interrupte 会打断正在阻塞状态的线程(wait、sleep、join)
+
+5.Callable
+Future模式
+客户端发起请求，服务端先创建一个future，再创建一个工作线程，先把future返回给客户端，工作线程再处理业务，最后将处理结果给future。客户端需要取值时，直接去取future。

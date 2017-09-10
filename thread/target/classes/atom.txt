@@ -1,0 +1,62 @@
+1.原子性  在java中，直接取值和赋值是原子操作,除了long型和double型(64位)，如果操作系统32位，则这两种类型的赋值不是原子操作
+
+AtomicBoolean -- 原子布尔
+AtomicInteger -- 原子整型
+AtomicIntegerArray -- 原子整型数组
+AtomicLong -- 原子长整型
+AtomicLongArray -- 原子长整型数组
+AtomicReference -- 原子引用
+AtomicReferenceArray -- 原子引用数组
+AtomicMarkableReference -- 原子标记引用
+AtomicStampedReference -- 原子戳记引用
+AtomicIntegerFieldUpdater -- 用来包裹对整形 volatile 域的原子操作
+AtomicLongFieldUpdater -- 用来包裹对长整型 volatile 域的原子操作
+AtomicReferenceFieldUpdater -- 用来包裹对对象 volatile 域的原子操作
+AtomicBoolean -- 原子布尔
+AtomicInteger -- 原子整型
+AtomicIntegerArray -- 原子整型数组
+AtomicLong -- 原子长整型
+AtomicLongArray -- 原子长整型数组
+AtomicReference -- 原子引用
+AtomicReferenceArray -- 原子引用数组
+AtomicMarkableReference -- 原子标记引用
+AtomicStampedReference -- 原子戳记引用
+AtomicIntegerFieldUpdater -- 用来包裹对整形 volatile 域的原子操作
+AtomicLongFieldUpdater -- 用来包裹对长整型 volatile 域的原子操作
+AtomicReferenceFieldUpdater -- 用来包裹对对象 volatile 域的原子操作
+
+
+比如有个数据是共享数据，在并发情况下需要做同步，否则数据不安全。传统的方式是加synchronized，通过悲观锁的方式，认为当前的操作会被其他线程影响。但是这种方式太过影响效率。
+
+线程都需要经常阻塞和唤起
+
+public synchronized void getNumIncrement(){
+    return num++;
+}
+
+
+原子类采用一种乐观的处理方式，在对共享数据操作时，不进行加锁操作。而是先对数据进行操作，再进行数据的比较，看是否其他线程已经更改了数据，如果没有，则返回更改的数据，否则继续重复上述操作。
+例：AtomicInteger 类的 incrementAndGet方法
+
+public final int incrementAndGet(){
+
+    for(;;){
+
+        int current = get();//获取当前值
+        next = value + 1; //+1操作
+        if(compareAndSet(current,next)){//如果没发现其他线程更改过值，则返回next，如果有发现其他线程更改过，则重复执行。
+            return next;
+        }
+    }
+}
+
+
+compareAndSet 里调用了UnSafe类的本地方法执行。跟操作系统底层有关。
+
+
+
+
+
+
+
+

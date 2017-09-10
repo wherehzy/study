@@ -1,0 +1,37 @@
+﻿1.线程五个状态
+  创建、就绪、运行、阻塞、死亡
+2.java thread
+    run 代表运行，就绪的线程被CPU调度之后就会调用
+    start代表线程就绪，不代表马上被调用，放在线程队列中
+    start（）方法来启动线程，真正实现了多线程运行
+
+    创建(调用start方法)进入到就绪状态
+    就绪获取到CPU资源进入到运行状态
+    运行状态使用了yield方法后回到就绪状态 (yield方法是告诉当前线程将运行的CPU资源让给其他线程池中的线程)
+    运行状态的线程调用了sleep、join、或者遇到synchronized、wait、或者进入IO操作时都会进入阻塞状态，sleep不会释放锁，wait会释放锁
+    调用wait方法会进入对象的等待池、调用synchronized等会进入锁定池
+    使用wait方法进入等待池的线程用notify()或者notifyAll()会进入锁定池
+    当阻塞的线程的sleep时间结束、join方法中断、或者IO完成时就会变回就绪状态
+
+    在Java中，每个对象都有两个池，锁(monitor)池和等待池
+
+    锁池：如果某线程A拥有了某个对象的锁，其他线程想要调用这个对象的synchronized方法，因为锁已经被A线程获得，所以其他线程只能进入这个对象的锁池，准备争夺锁
+    等待池：如果某线程A调用了对象的wait方法，因为调用wait方法是需要释放A线程在对象上的锁，所以线程A必须得先获得这个对象的锁，所以wait方法都是在synchronized内执行(就是为了保证线程A获得锁了)，
+    调用wait以后，线程A就进入了对象的等待池。当另一个线程调用了这个对象的notify 或者 notifyAll 方法，则在该对象等待池中的线程一个或者全部进入该对象的锁池之中(随机)，争夺锁。
+
+    在一个线程中调用other.join(),将等待other执行完后才继续本线程。
+
+    Thread.interrupt() 它的作用是，在线程受到阻塞时抛出一个中断信号，这样线程就得以退出阻塞的状态。更确切的说，如果线程被Object.wait, Thread.join和Thread.sleep三种方法之一阻塞，那么，它将接收到一个中断异常（InterruptedException），从而提早地终结被阻塞状态。
+
+3.离开线程有两种常用的方法：
+  抛出InterruptedException和用Thread.interrupted()检查是否发生中断
+
+4.线程基本方法
+Thread.yield();//将CPU控制权让给其他线程
+join();在一个线程中调用other.join() ，让其他线程执行完在执行本线程
+Thread.sleep(); 等待一段时间
+interrupte(); 调用线程的interrupte 会打断正在阻塞状态的线程(wait、sleep、join)
+
+5.Callable
+Future模式
+客户端发起请求，服务端先创建一个future，再创建一个工作线程，先把future返回给客户端，工作线程再处理业务，最后将处理结果给future。客户端需要取值时，直接去取future。

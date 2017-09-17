@@ -1,0 +1,51 @@
+1.  线程管理类
+ThreadPoolExecutor
+
+
+
+参数名	作用
+corePoolSize	核心线程池大小
+maximumPoolSize	线程池中超过corePoolSize数目的空闲线程最大存活时间；可以allowCoreThreadTimeOut(true)使得核心线程有效时间
+TimeUnit	keepAliveTime时间单位
+workQueue	阻塞任务队列
+threadFactory	新建线程工厂
+RejectedExecutionHandler	当提交任务数超过maxmumPoolSize+workQueue之和时，任务会交给RejectedExecutionHandler来处理
+重点讲解：
+其中比较容易让人误解的是：corePoolSize，maximumPoolSize，workQueue之间关系。
+
+1.当线程池小于corePoolSize时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程。
+2.当线程池达到corePoolSize时，新提交任务将被放入workQueue中，等待线程池中任务调度执行
+3.当workQueue已满，且maximumPoolSize>corePoolSize时，新提交任务会创建新线程执行任务
+4.当提交任务数超过maximumPoolSize时，新提交任务由RejectedExecutionHandler处理
+5.当线程池中超过corePoolSize线程，空闲时间达到keepAliveTime时，关闭空闲线程，keepAliveTime 如果没设置allowCoreThreadTimeOut，就只针对于核心线程池外的线程。
+6.当设置allowCoreThreadTimeOut(true)时，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+
+
+
+step1.调用ThreadPoolExecutor的execute提交线程，首先检查CorePool，如果CorePool内的线程小于CorePoolSize，新创建线程执行任务。
+step2.如果当前CorePool内的线程大于等于CorePoolSize，那么将线程加入到BlockingQueue。
+step3.如果不能加入BlockingQueue，在小于MaxPoolSize的情况下创建线程执行任务。
+step4.如果线程数大于等于MaxPoolSize，那么执行拒绝策略。
+
+
+ThreadPoolExecutor被初始化好之后便可以提交线程任务，线程的提交方法主要是execute和submit
+
+allowCoreThreadTimeOut：
+
+线程池回收线程只会发生在当前线程池中线程数量大于corePoolSize参数的时候；当线程池中线程数量小于等于corePoolSize参数的时候，回收过程就会停止。
+
+allowCoreThreadTimeOut设置项可以要求线程池：将包括“核心线程”在内的，没有任务分配的任何线程，在等待keepAliveTime时间后全部进行回收：
+
+
+prestartAllCoreThreads可以在线程池创建，但还没有接收到任何任务的情况下，先行创建符合corePoolSize参数值的线程数
+
+
+
+
+
+Executors 利用了ThreadPoolExecutor的原理
+固定大小的线程池，newFixedThreadPool
+可变尺寸的线程池，newCachedThreadPool
+单任务线程池，newSingleThreadExecutor
+newScheduledThreadPool 创建一个线程池，它可安排在给定延迟后运行命令或者定期地执行。
+
